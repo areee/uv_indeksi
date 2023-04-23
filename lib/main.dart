@@ -97,12 +97,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         children: [
                           Text(
                             'UV-indeksi: $_uvValue',
-                            style: Theme.of(context).textTheme.headline4,
+                            style: Theme.of(context).textTheme.headlineMedium,
                           ),
-                          Text(
-                            '$_uvTime',
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
+                          Text('Viimeisin tieto: $_uvTime'),
+                          const Text('Sijainti: Helsinki Kumpula'),
                         ],
                       ),
           ],
