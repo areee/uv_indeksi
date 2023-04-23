@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? _uvTime;
-  double _uvValue = -1;
+  String? _uvValue;
   var _loading = false;
 
   void _fetchUV() async {
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
       setState(() {
         _uvTime = formatDateTime(uv.time);
-        _uvValue = uv.value;
+        _uvValue = uv.value.toString().replaceAll('.', ',');
       });
     } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
