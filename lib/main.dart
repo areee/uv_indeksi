@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:uv_indeksi/date_helper.dart';
+import 'package:uv_indeksi/uv_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -37,14 +40,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  String uvTime = '';
-  double uvValue = -1;
+  String? _uvTime;
+  double _uvValue = -1;
+  var _loading = false;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  void _fetchUV() async {
+    try {
+      if (_loading) {
+        return;
+      }
+
+      setState(() {
+        _loading = true;
+      });
+
+      final uv = await fetchUV();
+
+      setState(() {
+        _uvTime = formatDateTime(uv.time);
+        _uvValue = uv.value;
+      });
+    } on Exception catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Virhe: $e'),
+        ),
+      );
+      if (kDebugMode) {
+        print(e);
+      }
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -57,20 +86,32 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Nykyinen UV-indeksi:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            _loading
+                ? const CircularProgressIndicator()
+                : _uvTime == null
+                    ? const Text(
+                        'Hae UV-indeksi napauttamalla päivityspainiketta',
+                      )
+                    : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'UV-indeksi: $_uvValue',
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          Text(
+                            '$_uvTime',
+                            style: Theme.of(context).textTheme.headline6,
+                          ),
+                        ],
+                      ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        onPressed: _fetchUV,
+        tooltip: 'Päivitä',
+        child: const Icon(Icons.refresh),
       ),
     );
   }
