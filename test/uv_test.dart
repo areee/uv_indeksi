@@ -3,13 +3,11 @@ import 'package:uv_indeksi/uv_service.dart';
 
 void main() {
   test('Read UV data from API', () async {
-    await fetchUV();
+    var uv = await fetchUV();
 
-    expect(1, 1);
-
-    // final uv = await fetchUV();
-    // expect(uv, isNotNull
-    // );
+    expect(uv, isNotNull);
+    expect(uv.time, isNotNull);
+    expect(uv.value, isNotNull);
   });
 
   // group('String', () {
