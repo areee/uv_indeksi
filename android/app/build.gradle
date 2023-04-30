@@ -60,6 +60,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'io.github.areee.uv_indeksi'
 }
 
 flutter {
