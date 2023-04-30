@@ -15,7 +15,6 @@ Future<UV> fetchUV() async {
     final localTime = DateTime.parse(
             latestUV.getElement('wml2:time')?.text ?? DateTime.now().toString())
         .toLocal();
-    // final formatLocal = formatDateTime(local);
 
     final value = double.parse(latestUV.getElement('wml2:value')?.text ?? '-1');
 
